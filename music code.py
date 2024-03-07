@@ -34,7 +34,14 @@ matrix = tfid.fit_transform(df['text'])
 similarity = cosine_similarity(matrix)
 
 def recommendation(song):
-    pass
+    index = df[df['song']]==song[0][0]
+    distances = sorted(list(enumerate(similarity[index])),key = lambda x:x[1],reverse = True)
+
+    name_of_songs  = []
+    for song in distances[1:8]:
+        song.append(df.iloc[i[0]].song)
+    
+    return song 
 
 # Example usage
 a = recommendation('If You Love Me')
