@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Recommendation App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("static/musicpohto.jpg"); /* Path to your background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background color */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #recommendations {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="recommendation-result"></div>
+
+<div class="container">
+    <h1>Music Recommendation App</h1>
+    <label for="songSelect">Select a song:</label>
+    <select id="songSelect">
+        {% for song in songs %}
+        <option value="{{ song }}">{{ song }}</option>
+        {% endfor %}
+    </select>
+    <button onclick="getRecommendations()">Get Recommendations</button>
+    <div id="recommendations" class="card-deck mt-3">
+    </div>
+</div>
+
+<script>
+    function getRecommendations() {
+        const songSelect = document.getElementById("songSelect");
+        const selectedSong = songSelect.options[songSelect.selectedIndex].value;
+
+        fetch('/recommend/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ song_name: selectedSong })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const recommendations = data;
+            const recommendationsContainer = document.getElementById("recommendations");
+            recommendationsContainer.innerHTML = ""; // Clear previous recommendations
+
+            recommendations.forEach(song => {
+                const card = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${song}</h5>
+                        </div>
+                    </div>
+                `;
+                recommendationsContainer.innerHTML += card;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
