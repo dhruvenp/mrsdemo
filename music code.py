@@ -34,6 +34,7 @@ matrix = tfid.fit_transform(df['text'])
 similarity = cosine_similarity(matrix)
 
 def recommendation(song):
+<<<<<<< HEAD
     index = df[df['song']]==song[0][0]
     distances = sorted(list(enumerate(similarity[index])),key = lambda x:x[1],reverse = True)
 
@@ -42,8 +43,31 @@ def recommendation(song):
         song.append(df.iloc[i[0]].song)
     
     return song 
+=======
+    # Check if df is not empty
+    if not df.empty:
+        # Filter DataFrame to rows where 'song' column matches the input
+        filtered_df = df[df['song'] == song]
+        if not filtered_df.empty:
+            # Retrieve the index of the first matching row
+            idx = filtered_df.index[0]
+            # Compute recommendations based on the index
+            distances = sorted(list(enumerate(similarity[idx])), reverse=True, key=lambda x: x[1])
+            songs = [df.iloc[i[0]]['song'] for i in distances[1:10]]
+            return songs
+        else:
+            print(f"No songs found matching '{song}'.")
+            return []
+    else:
+        print("DataFrame is empty.")
+        return []
+>>>>>>> debranch
 
 # Example usage
 a = recommendation('If You Love Me')
 print(a)
 
+
+
+
+print("Hello I'm Ghanshyam")
